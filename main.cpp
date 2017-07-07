@@ -35,7 +35,10 @@ int main(int argc, char** argv) {
     
     Player p("George Best");
     
-    /*Creation of the lambda, it is assigned to auto c so that it can be disconnected later on*/
+    /*Creation of the lambda, it is assigned to auto c so that it can be disconnected later on
+      Priority can be added to the slot by adding a number as first parameter of connect,
+      lower = higher priority --> higher priority executes first regardless of code placement
+    */
     auto c = p.Scores.connect([](string name, int goals) {
         if (goals == 1)
             cout << "Goal scored by " << name << "! He now has " << goals << " goal\n";
@@ -46,14 +49,17 @@ int main(int argc, char** argv) {
     p.goalScored();
     p.goalScored();
     
-    /*Below is where c is disconnected, this causes it to not print what's in the lambda above*/
+    /*Below is where c is disconnected temporarily, this causes it to not print what's in the lambda above*/
     {
       shared_connection_block b(c);
+      //scoped_connection sc(c);
       p.goalScored();
       p.goalScored();
     }
     
     p.goalScored();
+    
+    
 
     return 0;
 }
